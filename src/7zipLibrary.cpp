@@ -1,6 +1,12 @@
+#include "lib7zip.h"
+
+#ifdef S_OK
+#undef S_OK
+#endif
+
 #if !defined(_WIN32) && !defined(_OS2)
-#include "CPP/myWindows/StdAfx.h"
-#include "CPP/include_windows/windows.h"
+#include "CPP/Common/StdAfx.h"
+#include "CPP/Common/MyWindows.h"
 #endif
 
 #include "C/7zVersion.h"
@@ -9,8 +15,7 @@
 #include "CPP/Common/MyCom.h"
 #include "CPP/7zip/ICoder.h"
 #include "CPP/7zip/IPassword.h"
-#include "Common/ComTry.h"
-#include "Windows/PropVariant.h"
+#include "CPP/Common/ComTry.h"
 using namespace NWindows;
 
 #include "stdlib.h"
@@ -29,13 +34,14 @@ using namespace NWindows;
 #include "unistd.h"
 #endif
 
-#include "lib7zip.h"
-
 #include "HelperFuncs.h"
 #include "7ZipFunctions.h"
 #include "7ZipDllHandler.h"
 #include "OSFunctions.h"
 #include "7ZipArchiveOpenCallback.h"
+
+/*-------------- const defines ---------------------------*/
+const wchar_t kAnyStringWildcard = '*';
 
 /*-------------- static functions ------------------------*/
 extern bool LoadDllFromFolder(C7ZipDllHandler * pMainHandler, const wstring & folder_name, C7ZipObjectPtrArray & handlers);

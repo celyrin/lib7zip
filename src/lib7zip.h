@@ -1,36 +1,39 @@
 #ifndef __LIB_7ZIP_H__
 #define __LIB_7ZIP_H__
 
-#define LIB_7ZIP_VER_MAJOR 3
+#define LIB_7ZIP_VER_MAJOR 4
 #define LIB_7ZIP_VER_MINOR 0
-#define LIB_7ZIP_VER_BUILD 1
-#define LIB_7ZIP_VERSION "3.0"
-#define LIB_7ZIP_7ZIP_VERSION "lib7Zip 3.0"
-#define LIB_7ZIP_DATE "2020-12"
-#define LIB_7ZIP_COPYRIGHT "Copyright (c) 2009-2020"
+#define LIB_7ZIP_VER_BUILD 0
+#define LIB_7ZIP_VERSION "4.0"
+#define LIB_7ZIP_7ZIP_VERSION "lib7Zip 4.0"
+#define LIB_7ZIP_DATE "2025-08"
+#define LIB_7ZIP_COPYRIGHT "Copyright (c) 2009-2025"
 #define LIB_7ZIP_VERSION_COPYRIGHT_DATE MY_VERSION "  " MY_COPYRIGHT "  " MY_DATE
 
+#include <list>
 #include <string>
 #include <vector>
+
+// Include 7zip types
+#include "../includes/CPP/Common/MyTypes.h"
 
 #ifndef _WIN32
 #ifndef __int64
 #define __int64 long long int
 #endif
-#ifndef CLASS_E_CLASSNOTAVAILABLE
-#define CLASS_E_CLASSNOTAVAILABLE (0x80040111L)
-#endif
-#endif
-
+typedef std::basic_string<wchar_t> wstring;
+typedef std::basic_string<char> string;
+// CLASS_E_CLASSNOTAVAILABLE will be defined by MyWindows.h
 #define FILE_BEGIN           0
 #define FILE_CURRENT         1
 #define FILE_END             2
-
 #ifndef S_OK
 #define S_OK 				 0
 #endif
+#else
 typedef std::basic_string<wchar_t> wstring;
 typedef std::basic_string<char> string;
+#endif
 
 typedef std::vector<wstring> WStringArray;
 
@@ -105,20 +108,20 @@ public:
 
 public:
 	virtual wstring GetFullPath() const  = 0;
-	virtual unsigned __int64 GetSize() const = 0;
+	virtual UInt64 GetSize() const = 0;
 	virtual bool IsDir() const  = 0;
 	virtual bool IsEncrypted() const  = 0;
 
 	virtual unsigned int GetArchiveIndex() const  = 0;
 
 	virtual bool GetUInt64Property(lib7zip::PropertyIndexEnum propertyIndex,
-											   unsigned __int64 & val) const = 0;
+											   UInt64 & val) const = 0;
 	virtual bool GetBoolProperty(lib7zip::PropertyIndexEnum propertyIndex,
 								 bool & val) const = 0;
 	virtual bool GetStringProperty(lib7zip::PropertyIndexEnum propertyIndex,
 									  wstring & val) const = 0;
 	virtual bool GetFileTimeProperty(lib7zip::PropertyIndexEnum propertyIndex,
-									 unsigned __int64 & val) const = 0;
+									 UInt64 & val) const = 0;
 	virtual wstring GetArchiveItemPassword() const  = 0;
 	virtual void SetArchiveItemPassword(const wstring & password) = 0;
 	virtual bool IsPasswordSet() const = 0;
@@ -129,8 +132,8 @@ class C7ZipInStream
 public:
 	virtual wstring GetExt() const = 0;
 	virtual int Read(void *data, unsigned int size, unsigned int *processedSize) = 0;
-	virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition) = 0;
-	virtual int GetSize(unsigned __int64 * size) = 0;
+	virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition) = 0;
+	virtual int GetSize(UInt64 * size) = 0;
 };
 
 class C7ZipMultiVolumes
@@ -138,7 +141,7 @@ class C7ZipMultiVolumes
 public:
 	virtual wstring GetFirstVolumeName() = 0;
 	virtual bool MoveToVolume(const wstring & volumeName) = 0;
-	virtual unsigned __int64 GetCurrentVolumeSize() = 0;
+	virtual UInt64 GetCurrentVolumeSize() = 0;
 	virtual C7ZipInStream * OpenCurrentVolumeStream() = 0;
 };
 
@@ -146,8 +149,8 @@ class C7ZipOutStream
 {
 public:
 	virtual int Write(const void *data, unsigned int size, unsigned int *processedSize) = 0;
-	virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition) = 0;
-	virtual int SetSize(unsigned __int64 size) = 0;
+	virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition) = 0;
+	virtual int SetSize(UInt64 size) = 0;
 };
 
 class C7ZipArchive : public virtual C7ZipObject
@@ -169,13 +172,13 @@ public:
 	virtual void Close() = 0;
 
 	virtual bool GetUInt64Property(lib7zip::PropertyIndexEnum propertyIndex,
-											   unsigned __int64 & val) const = 0;
+											   UInt64 & val) const = 0;
 	virtual bool GetBoolProperty(lib7zip::PropertyIndexEnum propertyIndex,
 								 bool & val) const = 0;
 	virtual bool GetStringProperty(lib7zip::PropertyIndexEnum propertyIndex,
 									  wstring & val) const = 0;
 	virtual bool GetFileTimeProperty(lib7zip::PropertyIndexEnum propertyIndex,
-									 unsigned __int64 & val) const = 0;
+									 UInt64 & val) const = 0;
 };
 
 class C7ZipLibrary

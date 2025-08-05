@@ -11,12 +11,12 @@ public:
     virtual ~C7ZipInStreamWrapper() {}
 
 public:
-    MY_UNKNOWN_IMP2(IInStream, IStreamGetSize)
+    Z7_COM_UNKNOWN_IMP_2(IInStream, IStreamGetSize)
 
-    STDMETHOD(Read)(void *data, UInt32 size, UInt32 *processedSize);
-    STDMETHOD(Seek)(Int64 offset, UInt32 seekOrigin, UInt64 *newPosition);
+    STDMETHOD(Read)(void *data, UInt32 size, UInt32 *processedSize) throw();
+    STDMETHOD(Seek)(Int64 offset, UInt32 seekOrigin, UInt64 *newPosition) throw();
 
-    STDMETHOD(GetSize)(UInt64 *size);
+    STDMETHOD(GetSize)(UInt64 *size) throw();
 
 private:
     C7ZipInStream * m_pInStream;

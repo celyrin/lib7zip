@@ -1,6 +1,6 @@
 #if !defined(_WIN32) && !defined(_OS2)
-#include "CPP/myWindows/StdAfx.h"
-#include "CPP/include_windows/windows.h"
+#include "CPP/Common/StdAfx.h"
+#include "CPP/Common/MyWindows.h"
 #endif
 
 #include "C/7zVersion.h"
@@ -34,13 +34,13 @@ public:
 	bool IsPasswordSet() const;
 
 	virtual bool GetUInt64Property(lib7zip::PropertyIndexEnum propertyIndex,
-								   unsigned __int64 & val) const;
+								   UInt64 & val) const;
 	virtual bool GetBoolProperty(lib7zip::PropertyIndexEnum propertyIndex,
 								 bool & val) const;
 	virtual bool GetStringProperty(lib7zip::PropertyIndexEnum propertyIndex,
 								   wstring & val) const;
 	virtual bool GetFileTimeProperty(lib7zip::PropertyIndexEnum propertyIndex,
-								   unsigned __int64 & val) const;
+								   UInt64 & val) const;
 private:
 	CMyComPtr<IInArchive> m_pInArchive;
 	unsigned int m_nIndex;
@@ -129,7 +129,7 @@ bool C7ZipArchiveItemImpl::IsPasswordSet() const
 
 
 bool C7ZipArchiveItemImpl::GetUInt64Property(lib7zip::PropertyIndexEnum propertyIndex,
-											 unsigned __int64 & val) const
+											 UInt64 & val) const
 {
 	int p7zip_index = 0;
 
@@ -250,7 +250,7 @@ bool C7ZipArchiveItemImpl::GetStringProperty(lib7zip::PropertyIndexEnum property
 }
 
 bool C7ZipArchiveItemImpl::GetFileTimeProperty(lib7zip::PropertyIndexEnum propertyIndex,
-											 unsigned __int64 & val) const
+											 UInt64 & val) const
 {
 	int p7zip_index = 0;
 
@@ -274,8 +274,8 @@ bool C7ZipArchiveItemImpl::GetFileTimeProperty(lib7zip::PropertyIndexEnum proper
 		return false;
 
 	if (prop.vt == VT_FILETIME) {
-		unsigned __int64 tmp_val = 0;
-		memmove(&tmp_val, &prop.filetime, sizeof(unsigned __int64));
+		UInt64 tmp_val = 0;
+		memmove(&tmp_val, &prop.filetime, sizeof(UInt64));
 		val = tmp_val;
 		return true;
 	}
