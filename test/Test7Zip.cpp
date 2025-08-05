@@ -78,7 +78,7 @@ public:
 		return 1;
 	}
 
-	virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition)
+	virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition)
 	{
 		if (!m_pFile)
 			return 1;
@@ -95,7 +95,7 @@ public:
 		return result;
 	}
 
-	virtual int GetSize(unsigned __int64 * size)
+	virtual int GetSize(UInt64 * size)
 	{
 		if (size)
 			*size = m_nFileSize;
@@ -166,7 +166,7 @@ public:
 		return 1;
 	}
 
-	virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition)
+	virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition)
 	{
 		int result = fseek(m_pFile, (long)offset, seekOrigin);
 
@@ -181,7 +181,7 @@ public:
 		return result;
 	}
 
-	virtual int SetSize(unsigned __int64 size)
+	virtual int SetSize(UInt64 size)
 	{
 		wprintf(L"SetFileSize:%ld\n", size);
 		return 0;
@@ -268,7 +268,7 @@ int main(int argc, char * argv[])
 					index <= lib7zip::kpidIsDir;
 					index = (lib7zip::PropertyIndexEnum)(index + 1)) {
 					wstring strVal = L"";
-					unsigned __int64 val = 0;
+					UInt64 val = 0;
 					bool bVal = false;
 
 					bool result = pArchiveItem->GetUInt64Property(index, val);
