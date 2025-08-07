@@ -19,6 +19,7 @@ ADD_EXECUTABLE(${test_target_name}
 
 TARGET_INCLUDE_DIRECTORIES(${test_target_name} PRIVATE
      "../src"
+     "${SEVENZIP_INCLUDE_PATH}"
 )
 
 TARGET_LINK_LIBRARIES(${test_target_name}

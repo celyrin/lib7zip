@@ -5,14 +5,15 @@ lib7zip is a C++ wrapper library for accessing 7-Zip archives programmatically. 
 ## 🚀 Quick Start
 
 ```bash
-# Method 1: CMake (Recommended)
-export SEVENZIP_SOURCE_DIR=../7zip
+# Method 1: CMake with Submodule (Recommended)
+git submodule update --init --recursive
 mkdir build && cd build
 cmake .. -DBUILD_SHARED_LIB=OFF
 make -j4
 
 # Method 2: Direct compilation (Advanced users)
-cd src && g++ -I../includes -I../includes/CPP -I../includes/C -c *.cpp
+git submodule update --init --recursive
+cd src && g++ -I../third_party/7zip -I../third_party/7zip/CPP -I../third_party/7zip/C -c *.cpp
 ar rcs lib7zip.a *.o
 ```
 
@@ -26,9 +27,9 @@ ar rcs lib7zip.a *.o
 
 ## 📋 Requirements
 
-- **7-Zip 25.0 Source**: Available at `../7zip/` directory (official 7-Zip source code)
-- **C++ Compiler**: GCC 8+ or Clang 10+ with C++11 support  
-- **Build Tools**: CMake 3.5+ for CMake method
+- **7-Zip 25.0 Source**: Included as git submodule at `third_party/7zip/`
+- **C++ Compiler**: GCC 8+ or Clang 10+ with C++14 support  
+- **Build Tools**: CMake 3.5+ for CMake method, git for submodule management
 - **System Libraries**: pthread, dl (standard on most Linux systems)
 
 ## 🔧 Build Instructions
@@ -38,11 +39,14 @@ ar rcs lib7zip.a *.o
 ```bash
 cd lib7zip
 
+# Initialize submodule
+git submodule update --init --recursive
+
 # Create build directory
 mkdir -p build && cd build
 
-# Configure with 7-Zip source path
-cmake .. -DSEVENZIP_SOURCE_DIR=/path/to/7zip/source -DBUILD_SHARED_LIB=OFF
+# Configure (7-Zip source auto-detected from submodule)
+cmake .. -DBUILD_SHARED_LIB=OFF
 
 # Build library
 make -j4
@@ -53,14 +57,12 @@ make -j4
 ```bash
 cd lib7zip
 
-# Create includes directory with symbolic links
-mkdir -p includes
-ln -sf ../../7zip/CPP includes/CPP
-ln -sf ../../7zip/C includes/C
+# Initialize submodule
+git submodule update --init --recursive
 
 # Compile and create static library
 cd src
-g++ -std=c++11 -I../includes -I../includes/CPP -I../includes/C -c *.cpp
+g++ -std=c++14 -I../third_party/7zip -I../third_party/7zip/CPP -I../third_party/7zip/C -c *.cpp
 ar rcs lib7zip.a *.o
 ```
 
@@ -115,10 +117,10 @@ int main() {
 
 ```bash
 # Static linking
-g++ -std=c++11 app.cpp -I./includes -L./build/src -l7zip -ldl -lpthread
+g++ -std=c++14 app.cpp -I./third_party/7zip -L./build/src -l7zip -ldl -lpthread
 
 # Shared linking  
-g++ -std=c++11 app.cpp -I./includes -L./build/src -l7zip -ldl -lpthread
+g++ -std=c++14 app.cpp -I./third_party/7zip -L./build/src -l7zip -ldl -lpthread
 export LD_LIBRARY_PATH=./build/src:$LD_LIBRARY_PATH
 ```
 

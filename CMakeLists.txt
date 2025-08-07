@@ -25,10 +25,14 @@ ENDIF()
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
 
 OPTION(BUILD_SHARED_LIB "build shared library" OFF)
-SET(SEVENZIP_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../7zip" CACHE PATH "7zip source code path")
+
+# Use submodule 7zip source by default, allow override with SEVENZIP_SOURCE_DIR
+IF(NOT DEFINED SEVENZIP_SOURCE_DIR)
+  SET(SEVENZIP_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/7zip")
+ENDIF()
 
 IF (NOT IS_DIRECTORY ${SEVENZIP_SOURCE_DIR})
-  MESSAGE(FATAL_ERROR "must provide 7zip source path using -DSEVENZIP_SOURCE_DIR")
+  MESSAGE(FATAL_ERROR "7zip source not found at ${SEVENZIP_SOURCE_DIR}. Please ensure git submodule is initialized: git submodule update --init --recursive")
 ENDIF()
 
 SET(SEVENZIP_INCLUDE_PATH   "${SEVENZIP_SOURCE_DIR}"

@@ -15,7 +15,7 @@
 #include <vector>
 
 // Include 7zip types
-#include "../includes/CPP/Common/MyTypes.h"
+#include "CPP/Common/MyTypes.h"
 
 #ifndef _WIN32
 #ifndef __int64
