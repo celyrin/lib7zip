@@ -9,16 +9,16 @@ public:
     C7ZipCompressCodecsInfo(C7ZipLibrary * pLibrary);
     virtual ~C7ZipCompressCodecsInfo();
 
-    MY_UNKNOWN_IMP1(ICompressCodecsInfo)
+    Z7_COM_UNKNOWN_IMP_1(ICompressCodecsInfo)
 
 #if MY_VER_MAJOR >= 15
-    STDMETHOD(GetNumMethods)(UInt32 *numMethods);
+    STDMETHOD(GetNumMethods)(UInt32 *numMethods) throw();
 #else    
-    STDMETHOD(GetNumberOfMethods)(UInt32 *numMethods);
+    STDMETHOD(GetNumberOfMethods)(UInt32 *numMethods) throw();
 #endif	
-    STDMETHOD(GetProperty)(UInt32 index, PROPID propID, PROPVARIANT *value);
-    STDMETHOD(CreateDecoder)(UInt32 index, const GUID *interfaceID, void **coder);
-    STDMETHOD(CreateEncoder)(UInt32 index, const GUID *interfaceID, void **coder);
+    STDMETHOD(GetProperty)(UInt32 index, PROPID propID, PROPVARIANT *value) throw();
+    STDMETHOD(CreateDecoder)(UInt32 index, const GUID *interfaceID, void **coder) throw();
+    STDMETHOD(CreateEncoder)(UInt32 index, const GUID *interfaceID, void **coder) throw();
 
     void InitData();
 private:

@@ -5,8 +5,8 @@
 #endif
 
 #if !defined(_WIN32) && !defined(_OS2)
-#include "CPP/myWindows/StdAfx.h"
-#include "CPP/include_windows/windows.h"
+#include "CPP/Common/StdAfx.h"
+#include "CPP/Common/MyWindows.h"
 #endif
 
 #include "CPP/7zip/Archive/IArchive.h"
@@ -33,23 +33,23 @@ public:
 	virtual ~C7ZipOutStreamWrap() {}
 
 public:
-	MY_UNKNOWN_IMP1(IOutStream)
+	Z7_COM_UNKNOWN_IMP_1(IOutStream)
 
-	STDMETHOD(Seek)(Int64 offset, UInt32 seekOrigin, UInt64 *newPosition)
+	STDMETHOD(Seek)(Int64 offset, UInt32 seekOrigin, UInt64 *newPosition) throw()
 	{
 		return m_pOutStream->Seek(offset, seekOrigin, newPosition);
 	}
 
 #if MY_VER_MAJOR > 9 || (MY_VER_MAJOR == 9 && MY_VER_MINOR>=20)
-	STDMETHOD(SetSize)(UInt64 newSize)
+	STDMETHOD(SetSize)(UInt64 newSize) throw()
 #else
-	STDMETHOD(SetSize)(Int64 newSize)
+	STDMETHOD(SetSize)(Int64 newSize) throw()
 #endif
 	{
 		return m_pOutStream->SetSize(newSize);
 	}
 
-	STDMETHOD(Write)(const void *data, UInt32 size, UInt32 *processedSize)
+	STDMETHOD(Write)(const void *data, UInt32 size, UInt32 *processedSize) throw()
 	{
 		return m_pOutStream->Write(data, size, processedSize);
 	}
@@ -64,19 +64,19 @@ class CArchiveExtractCallback:
 	public CMyUnknownImp
 {
 public:
-	MY_UNKNOWN_IMP1(ICryptoGetTextPassword)
+	Z7_COM_UNKNOWN_IMP_1(ICryptoGetTextPassword)
 
 	// IProgress
-	STDMETHOD(SetTotal)(UInt64 size);
-	STDMETHOD(SetCompleted)(const UInt64 *completeValue);
+	STDMETHOD(SetTotal)(UInt64 size) throw();
+	STDMETHOD(SetCompleted)(const UInt64 *completeValue) throw();
 
 	// IArchiveExtractCallback
-	STDMETHOD(GetStream)(UInt32 index, ISequentialOutStream **outStream, Int32 askExtractMode);
-	STDMETHOD(PrepareOperation)(Int32 askExtractMode);
-	STDMETHOD(SetOperationResult)(Int32 resultEOperationResult);
+	STDMETHOD(GetStream)(UInt32 index, ISequentialOutStream **outStream, Int32 askExtractMode) throw();
+	STDMETHOD(PrepareOperation)(Int32 askExtractMode) throw();
+	STDMETHOD(SetOperationResult)(Int32 resultEOperationResult) throw();
 
 	// ICryptoGetTextPassword
-	STDMETHOD(CryptoGetTextPassword)(BSTR *aPassword);
+	STDMETHOD(CryptoGetTextPassword)(BSTR *aPassword) throw();
 	
 private:
 	C7ZipOutStreamWrap * _outFileStreamSpec;
@@ -116,13 +116,13 @@ public:
 	virtual bool IsPasswordSet() const;
 
 	virtual bool GetUInt64Property(lib7zip::PropertyIndexEnum propertyIndex,
-											   unsigned __int64 & val) const;
+											   UInt64 & val) const;
 	virtual bool GetBoolProperty(lib7zip::PropertyIndexEnum propertyIndex,
 								 bool & val) const;
 	virtual bool GetStringProperty(lib7zip::PropertyIndexEnum propertyIndex,
 									  wstring & val) const;
 	virtual bool GetFileTimeProperty(lib7zip::PropertyIndexEnum propertyIndex,
-									 unsigned __int64 & val) const;
+									 UInt64 & val) const;
 private:
 	C7ZipLibrary * m_pLibrary;
 	CMyComPtr<IInArchive> m_pInArchive;
@@ -250,18 +250,18 @@ bool Create7ZipArchive(C7ZipLibrary * pLibrary, IInArchive * pInArchive, C7ZipAr
 	return false;
 }
 
-STDMETHODIMP CArchiveExtractCallback::SetTotal(UInt64 /* size */)
+STDMETHODIMP CArchiveExtractCallback::SetTotal(UInt64 /* size */) throw()
 {
 	return S_OK;
 }
 
-STDMETHODIMP CArchiveExtractCallback::SetCompleted(const UInt64 * /* completeValue */)
+STDMETHODIMP CArchiveExtractCallback::SetCompleted(const UInt64 * /* completeValue */) throw()
 {
 	return S_OK;
 }
 
 STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index,
-												ISequentialOutStream **outStream, Int32 askExtractMode)
+												ISequentialOutStream **outStream, Int32 askExtractMode) throw()
 {
 	if (askExtractMode != NArchive::NExtract::NAskMode::kExtract)
 		return S_OK;
@@ -275,12 +275,12 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index,
 	return S_OK;
 }
 
-STDMETHODIMP CArchiveExtractCallback::PrepareOperation(Int32 askExtractMode)
+STDMETHODIMP CArchiveExtractCallback::PrepareOperation(Int32 askExtractMode) throw()
 {
 	return S_OK;
 }
 
-STDMETHODIMP CArchiveExtractCallback::SetOperationResult(Int32 operationResult)
+STDMETHODIMP CArchiveExtractCallback::SetOperationResult(Int32 operationResult) throw()
 {
 	HRESULT result = S_OK;
 
@@ -307,7 +307,7 @@ STDMETHODIMP CArchiveExtractCallback::SetOperationResult(Int32 operationResult)
 }
 
 
-STDMETHODIMP CArchiveExtractCallback::CryptoGetTextPassword(BSTR *password)
+STDMETHODIMP CArchiveExtractCallback::CryptoGetTextPassword(BSTR *password) throw()
 {
 	wstring strPassword(L"");
 
@@ -326,7 +326,7 @@ STDMETHODIMP CArchiveExtractCallback::CryptoGetTextPassword(BSTR *password)
 }
 
 bool C7ZipArchiveImpl::GetUInt64Property(lib7zip::PropertyIndexEnum propertyIndex,
-											 unsigned __int64 & val) const
+											 UInt64 & val) const
 {
 	int p7zip_index = 0;
 
@@ -445,7 +445,7 @@ bool C7ZipArchiveImpl::GetStringProperty(lib7zip::PropertyIndexEnum propertyInde
 }
 
 bool C7ZipArchiveImpl::GetFileTimeProperty(lib7zip::PropertyIndexEnum propertyIndex,
-											 unsigned __int64 & val) const
+											 UInt64 & val) const
 {
 	int p7zip_index = 0;
 

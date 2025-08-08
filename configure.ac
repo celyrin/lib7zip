@@ -1,6 +1,6 @@
 AC_INIT([lib7zip], [2.0.0], [jingnan.si@gmail.com])
 AC_CONFIG_SRCDIR(Lib7Zip/lib7zip.h)
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 AC_CONFIG_MACRO_DIR([m4])
 
 AC_CANONICAL_HOST
@@ -22,7 +22,7 @@ AC_TYPE_SIZE_T
 AC_TYPE_SSIZE_T
 
 # Checks for library functions.
-AC_HEADER_STDC
+AC_CHECK_HEADERS([stddef.h stdlib.h string.h])
 AC_CHECK_HEADERS([fcntl.h stddef.h string.h unistd.h dlfcn.h dirent.h])
 AC_CHECK_FUNCS([memset memmove])
 AC_CHECK_FUNCS([sqrt])
@@ -38,24 +38,24 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
 
 AM_CONDITIONAL(WIN32, test x$is_win32 = xyes)
 
-dnl check for p7zip source
-AC_ARG_VAR([P7ZIP_SOURCE_DIR], [p7zip source directory, must be set before compile source])
+dnl check for 7zip source
+AC_ARG_VAR([SEVENZIP_SOURCE_DIR], [7zip source directory, must be set before compile source])
 
-if test "x$P7ZIP_SOURCE_DIR" = "x"; then
-AC_MSG_FAILURE(P7ZIP_SOURCE_DIR is not set)
+if test "x$SEVENZIP_SOURCE_DIR" = "x"; then
+AC_MSG_FAILURE(SEVENZIP_SOURCE_DIR is not set)
 fi
 
-if test ! -d "$P7ZIP_SOURCE_DIR/C"; then
-AC_MSG_FAILURE($P7ZIP_SOURCE_DIR/C is invalid)
+if test ! -d "$SEVENZIP_SOURCE_DIR/C"; then
+AC_MSG_FAILURE($SEVENZIP_SOURCE_DIR/C is invalid)
 fi
 
-if test ! -d "$P7ZIP_SOURCE_DIR/CPP"; then
-AC_MSG_FAILURE(P7ZIP_SOURCE_DIR is invalid)
+if test ! -d "$SEVENZIP_SOURCE_DIR/CPP"; then
+AC_MSG_FAILURE(SEVENZIP_SOURCE_DIR is invalid)
 fi
 
-dnl create link for p7zip source
-AC_CONFIG_COMMANDS([p7zip_src_cpp_link], [ln -sf $P7ZIP_SOURCE_DIR/CPP includes/CPP])
-AC_CONFIG_COMMANDS([p7zip_src_c_link], [ln -sf $P7ZIP_SOURCE_DIR/C includes/C])
+dnl create link for 7zip source  
+AC_CONFIG_COMMANDS([sevenzip_src_cpp_link], [rm -rf includes/CPP && ln -sf $SEVENZIP_SOURCE_DIR/CPP includes/CPP])
+AC_CONFIG_COMMANDS([sevenzip_src_c_link], [rm -rf includes/C && ln -sf $SEVENZIP_SOURCE_DIR/C includes/C])
 
 AC_CONFIG_FILES([
 	Makefile

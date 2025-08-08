@@ -11,6 +11,7 @@ C7ZipObjectPtrArray::C7ZipObjectPtrArray(bool auto_release) : m_bAutoRelease(aut
 
 C7ZipObjectPtrArray::~C7ZipObjectPtrArray()
 {
+#include "CPP/Windows/PropVariant.h"
     clear();
 }
 

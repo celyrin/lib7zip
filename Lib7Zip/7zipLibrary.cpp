@@ -5,8 +5,8 @@
 #endif
 
 #if !defined(_WIN32) && !defined(_OS2)
-#include "CPP/myWindows/StdAfx.h"
-#include "CPP/include_windows/windows.h"
+#include "CPP/Common/StdAfx.h"
+#include "CPP/Common/MyWindows.h"
 #endif
 
 #include "C/7zVersion.h"
@@ -15,8 +15,7 @@
 #include "CPP/Common/MyCom.h"
 #include "CPP/7zip/ICoder.h"
 #include "CPP/7zip/IPassword.h"
-#include "Common/ComTry.h"
-#include "Windows/PropVariant.h"
+#include "CPP/Common/ComTry.h"
 using namespace NWindows;
 
 #include "stdlib.h"

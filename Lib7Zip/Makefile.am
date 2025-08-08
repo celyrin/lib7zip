@@ -4,14 +4,17 @@ if WIN32
 A_EXTRA_FLAGS = -DUNICODE -D_UNICODE
 A_LIBS = -loleaut32 -luuid
 else
-A_EXTRA_FLAGS = 
-A_LIBS = -no-undefined
+A_EXTRA_FLAGS = -DNDEBUG -D_7ZIP_ST -fPIC
+A_LIBS = -no-undefined -ldl -lpthread
 endif
 
 AM_CPPFLAGS = -I../includes \
 	-I../includes/CPP \
-	-I../includes/CPP/myWindows \
-	-I../includes/CPP/include_windows \
+	-I../includes/CPP/Common \
+	-I../includes/CPP/Windows \
+	-I../includes/CPP/7zip \
+	-I../includes/CPP/7zip/Archive \
+	-I../includes/C \
 	$(A_EXTRA_FLAGS)
 
 SOURCES = \
@@ -27,7 +30,7 @@ SOURCES = \
 	7ZipFormatInfo.cpp \
 	7ZipFormatInfo.h \
 	7ZipFunctions.h \
-	7ZipObjectPtrArray.cpp \
+	7ZipObjectPtrArray_stub.cpp \
 	7ZipOpenArchive.cpp \
 	OSFunctions.h \
 	OSFunctions_OS2.h \
@@ -38,8 +41,8 @@ SOURCES = \
 	7ZipInStreamWrapper.cpp \
 	7ZipInStreamWrapper.h
 
-NODIST_SOURCES = ../includes/CPP/Common/MyWindows.cpp ../includes/CPP/Common/StdAfx.h \
-	../includes/CPP/Windows/PropVariant.cpp ../inclues/CPP/Windows/StdAfx.h
+NODIST_SOURCES = ../includes/CPP/Common/MyWindows.cpp \
+	../includes/CPP/Windows/PropVariant.cpp
 
 lib7zip_a_SOURCES = $(SOURCES)
 

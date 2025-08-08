@@ -22,7 +22,7 @@ test7ziprar5_SOURCES = \
 if WIN32
 A_LIBS = -loleaut32 -luuid
 else
-A_LIBS = -ldl
+A_LIBS = -ldl -lpthread
 endif
 
 test7zip_LDADD = ../Lib7Zip/lib7zip.a \

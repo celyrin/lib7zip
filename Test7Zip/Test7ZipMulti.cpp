@@ -86,7 +86,7 @@ public:
 		return 1;
 	}
 
-	virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition)
+	virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition)
 	{
 		wprintf(L"Seek\n");
 		int result = fseek(m_pFile, (long)offset, seekOrigin);
@@ -102,7 +102,7 @@ public:
 		return result;
 	}
 
-	virtual int GetSize(unsigned __int64 * size)
+	virtual int GetSize(UInt64 * size)
 	{
 		wprintf(L"Size\n");
 		if (size)
@@ -168,7 +168,7 @@ public:
 		return new TestInStream(m_strCurVolume);
 	}
 		
-	virtual unsigned __int64 GetCurrentVolumeSize() {
+	virtual UInt64 GetCurrentVolumeSize() {
 		wprintf(L"get current volume size:%ls\n", m_strCurVolume.c_str());
 		return m_nFileSize;
 	}
@@ -237,7 +237,7 @@ public:
 		return 1;
 	}
 
-	virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition)
+	virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition)
 	{
 		int result = fseek(m_pFile, (long)offset, seekOrigin);
 
@@ -252,7 +252,7 @@ public:
 		return result;
 	}
 
-	virtual int SetSize(unsigned __int64 size)
+	virtual int SetSize(UInt64 size)
 	{
 		wprintf(L"SetFileSize:%ld\n", size);
 		return 0;

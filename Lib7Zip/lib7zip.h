@@ -14,13 +14,14 @@
 #include <string>
 #include <vector>
 
+// Include 7zip types
+#include "../includes/CPP/Common/MyTypes.h"
+
 #ifndef _WIN32
 #define __int64 long long int
 typedef std::basic_string<wchar_t> wstring;
 typedef std::basic_string<char> string;
-#ifndef CLASS_E_CLASSNOTAVAILABLE
-#define CLASS_E_CLASSNOTAVAILABLE (0x80040111L)
-#endif
+// CLASS_E_CLASSNOTAVAILABLE will be defined by MyWindows.h
 #define FILE_BEGIN           0
 #define FILE_CURRENT         1
 #define FILE_END             2
@@ -104,20 +105,20 @@ public:
 
 public:
 	virtual wstring GetFullPath() const  = 0;
-	virtual unsigned __int64 GetSize() const = 0;
+	virtual UInt64 GetSize() const = 0;
 	virtual bool IsDir() const  = 0;
 	virtual bool IsEncrypted() const  = 0;
 
 	virtual unsigned int GetArchiveIndex() const  = 0;
 
 	virtual bool GetUInt64Property(lib7zip::PropertyIndexEnum propertyIndex,
-											   unsigned __int64 & val) const = 0;
+											   UInt64 & val) const = 0;
 	virtual bool GetBoolProperty(lib7zip::PropertyIndexEnum propertyIndex,
 								 bool & val) const = 0;
 	virtual bool GetStringProperty(lib7zip::PropertyIndexEnum propertyIndex,
 									  wstring & val) const = 0;
 	virtual bool GetFileTimeProperty(lib7zip::PropertyIndexEnum propertyIndex,
-									 unsigned __int64 & val) const = 0;
+									 UInt64 & val) const = 0;
 	virtual wstring GetArchiveItemPassword() const  = 0;
 	virtual void SetArchiveItemPassword(const wstring & password) = 0;
 	virtual bool IsPasswordSet() const = 0;
@@ -131,8 +132,8 @@ public:
 public:
 	virtual wstring GetExt() const = 0;
 	virtual int Read(void *data, unsigned int size, unsigned int *processedSize) = 0;
-	virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition) = 0;
-	virtual int GetSize(unsigned __int64 * size) = 0;
+	virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition) = 0;
+	virtual int GetSize(UInt64 * size) = 0;
 };
 
 class C7ZipMultiVolumes
@@ -143,7 +144,7 @@ public:
 public:
 	virtual wstring GetFirstVolumeName() = 0;
 	virtual bool MoveToVolume(const wstring & volumeName) = 0;
-	virtual unsigned __int64 GetCurrentVolumeSize() = 0;
+	virtual UInt64 GetCurrentVolumeSize() = 0;
 	virtual C7ZipInStream * OpenCurrentVolumeStream() = 0;
 };
 
@@ -154,8 +155,8 @@ public:
 
 public:
 	virtual int Write(const void *data, unsigned int size, unsigned int *processedSize) = 0;
-	virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition) = 0;
-	virtual int SetSize(unsigned __int64 size) = 0;
+	virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition) = 0;
+	virtual int SetSize(UInt64 size) = 0;
 };
 
 class C7ZipArchive : public virtual C7ZipObject
@@ -177,13 +178,13 @@ public:
 	virtual void Close() = 0;
 
 	virtual bool GetUInt64Property(lib7zip::PropertyIndexEnum propertyIndex,
-											   unsigned __int64 & val) const = 0;
+											   UInt64 & val) const = 0;
 	virtual bool GetBoolProperty(lib7zip::PropertyIndexEnum propertyIndex,
 								 bool & val) const = 0;
 	virtual bool GetStringProperty(lib7zip::PropertyIndexEnum propertyIndex,
 									  wstring & val) const = 0;
 	virtual bool GetFileTimeProperty(lib7zip::PropertyIndexEnum propertyIndex,
-									 unsigned __int64 & val) const = 0;
+									 UInt64 & val) const = 0;
 };
 
 class C7ZipLibrary

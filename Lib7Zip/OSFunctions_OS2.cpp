@@ -11,6 +11,7 @@ void *GetProcAddress (HMODULE hmod, const char *symbol) {
     HMODULE hmod3 = *hmod2;
     //HMODULE hmod3 = hmod;
     std::cerr << "DosQueryProcAddr " << symbol << " from module hmod3: " << hmod2 << std::endl;
+#include "CPP/Windows/PropVariant.h"
     char *symbol3 = strdup(symbol);
     //std::cerr << "DosQueryProcAddr (2) " << symbol2 << " from module hmod3: " << hmod2 << std::endl;
 

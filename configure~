@@ -10673,10 +10673,6 @@ _lt_linker_boilerplate=`cat conftest.err`
 $RM -r conftest*
 
 
-## CAVEAT EMPTOR:
-## There is no encapsulation within the following macros, do not change
-## the running order or otherwise move them around unless you know exactly
-## what you are doing...
 if test -n "$compiler"; then
 
 lt_prog_compiler_no_builtin_flag=
@@ -20405,8 +20401,8 @@ compiler_lib_search_path=$lt_compiler_lib_search_path_CXX
 _LT_EOF
 
  ;;
-    "sevenzip_src_cpp_link":C) rm -rf includes/CPP && ln -sf $SEVENZIP_SOURCE_DIR/CPP includes/CPP ;;
-    "sevenzip_src_c_link":C) rm -rf includes/C && ln -sf $SEVENZIP_SOURCE_DIR/C includes/C ;;
+    "sevenzip_src_cpp_link":C) ln -sf $SEVENZIP_SOURCE_DIR/CPP includes/CPP ;;
+    "sevenzip_src_c_link":C) ln -sf $SEVENZIP_SOURCE_DIR/C includes/C ;;
 
   esac
 done # for ac_tag

@@ -5,8 +5,8 @@
 #endif
 
 #if !defined(_WIN32) && !defined(_OS2)
-#include "CPP/myWindows/StdAfx.h"
-#include "CPP/include_windows/windows.h"
+#include "CPP/Common/StdAfx.h"
+#include "CPP/Common/MyWindows.h"
 #endif
 
 #include "C/7zVersion.h"
@@ -15,8 +15,7 @@
 #include "CPP/Common/MyCom.h"
 #include "CPP/7zip/ICoder.h"
 #include "CPP/7zip/IPassword.h"
-#include "Common/ComTry.h"
-#include "Windows/PropVariant.h"
+#include "CPP/Common/ComTry.h"
 using namespace NWindows;
 
 #include "stdlib.h"
@@ -25,17 +24,17 @@ using namespace NWindows;
 #include "7ZipInStreamWrapper.h"
 
 /*--------------------C7ZipArchiveOpenCallback------------------*/
-STDMETHODIMP C7ZipArchiveOpenCallback::SetTotal(const UInt64 * /* files */, const UInt64 * /* bytes */)
+STDMETHODIMP C7ZipArchiveOpenCallback::SetTotal(const UInt64 * /* files */, const UInt64 * /* bytes */) throw()
 {
     return S_OK;
 }
 
-STDMETHODIMP C7ZipArchiveOpenCallback::SetCompleted(const UInt64 * /* files */, const UInt64 * /* bytes */)
+STDMETHODIMP C7ZipArchiveOpenCallback::SetCompleted(const UInt64 * /* files */, const UInt64 * /* bytes */) throw()
 {
     return S_OK;
 }
 
-STDMETHODIMP C7ZipArchiveOpenCallback::CryptoGetTextPassword(BSTR *password)
+STDMETHODIMP C7ZipArchiveOpenCallback::CryptoGetTextPassword(BSTR *password) throw()
 {
     if (!PasswordIsDefined) {
         return E_NEEDPASSWORD;
@@ -49,7 +48,7 @@ STDMETHODIMP C7ZipArchiveOpenCallback::CryptoGetTextPassword(BSTR *password)
 #endif
 }
 
-STDMETHODIMP C7ZipArchiveOpenCallback::GetProperty(PROPID propID, PROPVARIANT *value) 
+STDMETHODIMP C7ZipArchiveOpenCallback::GetProperty(PROPID propID, PROPVARIANT *value) throw() 
 {
 	COM_TRY_BEGIN
 	NCOM::CPropVariant prop;
@@ -77,9 +76,9 @@ STDMETHODIMP C7ZipArchiveOpenCallback::GetProperty(PROPID propID, PROPVARIANT *v
 				}
 				break;
 			case kpidAttrib: prop = (UInt32)0; break;
-			case kpidCTime: prop = 0; break;
-			case kpidATime: prop = 0; break;
-			case kpidMTime: prop = 0; break;
+			case kpidCTime: prop = (UInt64)0; break;
+			case kpidATime: prop = (UInt64)0; break;
+			case kpidMTime: prop = (UInt64)0; break;
 			}
 
 	prop.Detach(value);
@@ -87,7 +86,7 @@ STDMETHODIMP C7ZipArchiveOpenCallback::GetProperty(PROPID propID, PROPVARIANT *v
 	COM_TRY_END
 }
 
-STDMETHODIMP C7ZipArchiveOpenCallback::GetStream(const wchar_t *name, IInStream **inStream)
+STDMETHODIMP C7ZipArchiveOpenCallback::GetStream(const wchar_t *name, IInStream **inStream) throw()
 {
 	C7ZipInStream * pInStream = NULL;
 	if (m_bMultiVolume) {

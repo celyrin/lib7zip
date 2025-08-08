@@ -11,24 +11,30 @@ public IArchiveOpenCallback,
     public CMyUnknownImp
 {
  public:
-	MY_UNKNOWN_IMP3(
+	Z7_COM_UNKNOWN_IMP_3(
 					IArchiveOpenVolumeCallback,
 					ICryptoGetTextPassword,
 					IArchiveOpenSetSubArchiveName
 					);
 
-	INTERFACE_IArchiveOpenCallback(;);
-	INTERFACE_IArchiveOpenVolumeCallback(;);
+	// IArchiveOpenCallback interface methods
+	STDMETHOD(SetTotal)(const UInt64 *files, const UInt64 *bytes) throw();
+	STDMETHOD(SetCompleted)(const UInt64 *files, const UInt64 *bytes) throw();
 
-	STDMETHOD(CryptoGetTextPassword)(BSTR *password);
+	// IArchiveOpenVolumeCallback interface methods  
+	STDMETHOD(GetProperty)(PROPID propID, PROPVARIANT *value) throw();
+	STDMETHOD(GetStream)(const wchar_t *name, IInStream **inStream) throw();
 
-	STDMETHOD(SetSubArchiveName(const wchar_t *name))		{
+	STDMETHOD(CryptoGetTextPassword)(BSTR *password) throw();
+
+	STDMETHOD(SetSubArchiveName(const wchar_t *name)) throw()		{
 		_subArchiveMode = true;
 		_subArchiveName = name;
 		TotalSize = 0;
 		return  S_OK;
 	}
 
+public:
     bool PasswordIsDefined;
     wstring Password;
 
@@ -39,6 +45,7 @@ public IArchiveOpenCallback,
     C7ZipMultiVolumes * m_pMultiVolumes;
 	bool m_bMultiVolume;
 
+public:
  C7ZipArchiveOpenCallback(C7ZipMultiVolumes * pMultiVolumes) : PasswordIsDefined(false),
 		_subArchiveMode(false), 
 		m_pMultiVolumes(pMultiVolumes),
