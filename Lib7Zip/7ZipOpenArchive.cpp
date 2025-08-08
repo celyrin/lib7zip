@@ -1,4 +1,5 @@
 #include "lib7zip.h"
+#include "compat.h"
 
 #ifdef S_OK
 #undef S_OK
@@ -37,6 +38,22 @@ using namespace NWindows;
 #include <algorithm>
 
 const UInt64 kMaxCheckStartPosition = 1 << 22;
+
+// Safe memory search function to replace potentially unsafe memmem usage
+static inline void* safe_memmem(const void* haystack, size_t haystacklen,
+                               const void* needle, size_t needlelen) {
+    if (!haystack || !needle || haystacklen < needlelen || needlelen == 0) {
+        return nullptr;
+    }
+    
+    // Add maximum search limit to prevent DOS attacks
+    const size_t MAX_SEARCH_SIZE = 1024 * 1024 * 100; // 100MB limit
+    if (haystacklen > MAX_SEARCH_SIZE) {
+        return nullptr;
+    }
+    
+    return memmem(haystack, haystacklen, needle, needlelen);
+}
 
 extern bool Create7ZipArchive(C7ZipLibrary * pLibrary, IInArchive * pInArchive, C7ZipArchive ** pArchive);
 
@@ -99,7 +116,7 @@ static const C7ZipFormatInfo* SearchForSfxRealHandler(const C7ZipObjectPtrArray 
         {
             for (unsigned i = 0; i < pInfo->Signatures.Size(); i++)
             {
-                if (memmem(static_cast<unsigned char*>(fileHeader),
+                if (safe_memmem(static_cast<unsigned char*>(fileHeader),
                     fileHeader.Size(),
                     static_cast<const unsigned char*>(pInfo->Signatures[i]),
                     pInfo->Signatures[i].Size()) != NULL)
@@ -200,7 +217,7 @@ HRESULT Lib7ZipOpenArchive(C7ZipLibrary * pLibrary,
 
 	if (passwd.length() > 0) {
 		pOpenCallBack->PasswordIsDefined = true;
-		pOpenCallBack->Password = passwd;
+		pOpenCallBack->Password.set(passwd);
 	}
 
 	return InternalOpenArchive(pLibrary, pHandler, pInStream,
@@ -229,7 +246,7 @@ HRESULT Lib7ZipOpenMultiVolumeArchive(C7ZipLibrary * pLibrary,
 
 	if (passwd.length() > 0) {
 		pOpenCallBack->PasswordIsDefined = true;
-		pOpenCallBack->Password = passwd;
+		pOpenCallBack->Password.set(passwd);
 	}
 
 	return InternalOpenArchive(pLibrary, pHandler, pInStream,

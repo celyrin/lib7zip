@@ -1,4 +1,5 @@
 #include "lib7zip.h"
+#include "compat.h"
 
 #ifdef S_OK
 #undef S_OK
@@ -26,26 +27,32 @@ using namespace NWindows;
 /*--------------------C7ZipArchiveOpenCallback------------------*/
 STDMETHODIMP C7ZipArchiveOpenCallback::SetTotal(const UInt64 * /* files */, const UInt64 * /* bytes */) throw()
 {
-    return S_OK;
+    return 0;
 }
 
 STDMETHODIMP C7ZipArchiveOpenCallback::SetCompleted(const UInt64 * /* files */, const UInt64 * /* bytes */) throw()
 {
-    return S_OK;
+    return 0;
 }
 
 STDMETHODIMP C7ZipArchiveOpenCallback::CryptoGetTextPassword(BSTR *password) throw()
 {
-    if (!PasswordIsDefined) {
+    VALIDATE_POINTER(password, E_POINTER);
+    
+    if (!PasswordIsDefined || Password.empty()) {
         return E_NEEDPASSWORD;
     }
-
+    
+    try {
 #ifdef _WIN32
-    return StringToBstr(Password.c_str(), password);
+        return StringToBstr(Password.c_str(), password);
 #else
-    *password = ::SysAllocString(Password.c_str());
-	return S_OK;
+        *password = ::SysAllocString(Password.c_str());
+        return 0;
 #endif
+    } catch (...) {
+        return E_OUTOFMEMORY;
+    }
 }
 
 STDMETHODIMP C7ZipArchiveOpenCallback::GetProperty(PROPID propID, PROPVARIANT *value) throw() 

@@ -1,31 +1,44 @@
 #ifndef LIB7ZIP_COMPAT_H
 #define LIB7ZIP_COMPAT_H
 
-// Compatibility layer for 7zip 25.0
+// Minimal compatibility layer for 7zip 25.0 - Fixed version
+// This version avoids conflicts with existing 7-Zip headers
 
-// Remove conflicting defines
-#ifdef CLASS_E_CLASSNOTAVAILABLE
-#undef CLASS_E_CLASSNOTAVAILABLE
+// Safe error handling macros
+#define SAFE_COM_CALL(call) \
+    do { \
+        HRESULT hr = (call); \
+        if (FAILED(hr)) { \
+            return hr; \
+        } \
+    } while(0)
+
+#define VALIDATE_POINTER(ptr, retval) \
+    if (!(ptr)) { \
+        return (retval); \
+    }
+
+// Define missing constants if not already defined
+#ifndef E_POINTER
+#define E_POINTER ((HRESULT)0x80004003L)
 #endif
 
-// Include 7zip headers first
-#include "CPP/Common/MyCom.h"
-
-// Use proper COM implementation macros
-#define MY_UNKNOWN_IMP1_MT(i) \
-  STDMETHOD(QueryInterface)(REFIID iid, void **outObject) throw(); \
-  STDMETHOD_(ULONG, AddRef)() throw(); \
-  STDMETHOD_(ULONG, Release)() throw(); \
-  private: LONG _refCount; \
-  public: CMyComPtr<i> _impl;
-
-#define Z7_COM_UNKNOWN_IMP_1(i) MY_UNKNOWN_IMP1_MT(i)
-
-// For newer versions, methods should use throw() specification
-#if MY_VER_MAJOR >= 15
-#define COM_METHOD_THROW throw()
-#else  
-#define COM_METHOD_THROW
+#ifndef E_OUTOFMEMORY
+#define E_OUTOFMEMORY ((HRESULT)0x8007000EL)
 #endif
+
+// Type safety helpers
+template<typename T>
+inline bool IsValidPointer(const T* ptr) {
+    return ptr != nullptr;
+}
+
+// Safe memory operations
+template<typename T>
+inline void SafeClearMemory(T* ptr, size_t count = 1) {
+    if (ptr && count > 0) {
+        memset(ptr, 0, sizeof(T) * count);
+    }
+}
 
 #endif // LIB7ZIP_COMPAT_H

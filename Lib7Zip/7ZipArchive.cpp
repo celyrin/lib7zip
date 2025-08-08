@@ -469,8 +469,8 @@ bool C7ZipArchiveImpl::GetFileTimeProperty(lib7zip::PropertyIndexEnum propertyIn
 		return false;
 
 	if (prop.vt == VT_FILETIME) {
-		unsigned __int64 tmp_val = 0;
-		memmove(&tmp_val, &prop.filetime, sizeof(unsigned __int64));
+		UInt64 tmp_val = 0;
+		memmove(&tmp_val, &prop.filetime, sizeof(UInt64));
 		val = tmp_val;
 		return true;
 	}

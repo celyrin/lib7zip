@@ -48,6 +48,11 @@ public:
 
 public:
 	void clear();
+	
+	// Enhanced safety methods
+	void push_back_safe(C7ZipObject* obj);
+	void remove_safe(C7ZipObject* obj);
+	size_t get_valid_count() const;
 
 private:
     bool m_bAutoRelease;

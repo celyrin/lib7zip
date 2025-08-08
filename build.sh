@@ -2,8 +2,8 @@
 
 set -e
 
-# 7zip source directory - adjust this path to point to your 7zip source
-SEVENZIP_SOURCE_DIR="${SEVENZIP_SOURCE_DIR:-$(dirname "$(pwd)")/7zip}"
+# 7zip source directory - now using third_party/7zip
+SEVENZIP_SOURCE_DIR="${SEVENZIP_SOURCE_DIR:-$(pwd)/third_party/7zip}"
 
 if [ ! -d "$SEVENZIP_SOURCE_DIR" ]; then
     echo "Error: 7zip source directory not found at $SEVENZIP_SOURCE_DIR"

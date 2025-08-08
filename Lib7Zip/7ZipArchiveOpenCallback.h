@@ -1,6 +1,8 @@
 #ifndef __7ZIP_ARCHIVE_OPEN_CALLBACK_H__
 #define  __7ZIP_ARCHIVE_OPEN_CALLBACK_H__
 
+#include "SecureString.h"
+
 #define E_NEEDPASSWORD ((HRESULT)0x80040001L)
 
 class C7ZipArchiveOpenCallback:
@@ -31,12 +33,12 @@ public IArchiveOpenCallback,
 		_subArchiveMode = true;
 		_subArchiveName = name;
 		TotalSize = 0;
-		return  S_OK;
+		return  0;  // Use 0 instead of S_OK to avoid conflicts
 	}
 
 public:
     bool PasswordIsDefined;
-    wstring Password;
+    SecureString Password;  // Enhanced: secure password storage
 
 	wstring _subArchiveName;
 	bool _subArchiveMode;
