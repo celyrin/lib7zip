@@ -43,13 +43,13 @@ const UInt64 kMaxCheckStartPosition = 1 << 22;
 static inline void* safe_memmem(const void* haystack, size_t haystacklen,
                                const void* needle, size_t needlelen) {
     if (!haystack || !needle || haystacklen < needlelen || needlelen == 0) {
-        return nullptr;
+        return NULL;
     }
     
     // Add maximum search limit to prevent DOS attacks
     const size_t MAX_SEARCH_SIZE = 1024 * 1024 * 100; // 100MB limit
     if (haystacklen > MAX_SEARCH_SIZE) {
-        return nullptr;
+        return NULL;
     }
     
     return memmem(haystack, haystacklen, needle, needlelen);

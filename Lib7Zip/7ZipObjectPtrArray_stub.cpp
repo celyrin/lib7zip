@@ -19,7 +19,8 @@ C7ZipObjectPtrArray::~C7ZipObjectPtrArray() {
 void C7ZipObjectPtrArray::clear() {
     if (m_bAutoRelease) {
         // Enhanced memory safety: validate each pointer before deletion
-        for (auto* obj : *this) {
+        for (iterator it = begin(); it != end(); ++it) {
+            C7ZipObject* obj = *it;
             if (IsValidPointer(obj)) {
                 try {
                     // Ensure virtual destructor is called properly
@@ -45,7 +46,7 @@ void C7ZipObjectPtrArray::push_back_safe(C7ZipObject* obj) {
 
 void C7ZipObjectPtrArray::remove_safe(C7ZipObject* obj) {
     if (IsValidPointer(obj)) {
-        auto it = std::find(begin(), end(), obj);
+        iterator it = std::find(begin(), end(), obj);
         if (it != end()) {
             if (m_bAutoRelease) {
                 delete *it;
@@ -56,7 +57,11 @@ void C7ZipObjectPtrArray::remove_safe(C7ZipObject* obj) {
 }
 
 size_t C7ZipObjectPtrArray::get_valid_count() const {
-    return std::count_if(begin(), end(), [](const C7ZipObject* obj) {
-        return IsValidPointer(obj);
-    });
+    size_t count = 0;
+    for (const_iterator it = begin(); it != end(); ++it) {
+        if (IsValidPointer(*it)) {
+            count++;
+        }
+    }
+    return count;
 }

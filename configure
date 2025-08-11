@@ -5824,6 +5824,9 @@ printf "%s\n" "#define HAVE_STDBOOL_H 1" >>confdefs.h
 fi
 
 
+# Ensure C++11 support
+CXXFLAGS="$CXXFLAGS -std=c++11"
+
   if test -n "$ac_tool_prefix"; then
   for ac_prog in ar lib "link -lib"
   do

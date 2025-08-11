@@ -30,7 +30,7 @@
 // Type safety helpers
 template<typename T>
 inline bool IsValidPointer(const T* ptr) {
-    return ptr != nullptr;
+    return ptr != NULL;
 }
 
 // Safe memory operations

@@ -9,7 +9,7 @@
 class SecureString {
 private:
     std::vector<wchar_t> data;
-    mutable bool locked = false;
+    mutable bool locked;
     
     // Security: overwrite memory multiple times
     void secure_clear() {
@@ -25,7 +25,7 @@ private:
     
 public:
     // Constructor from regular wstring
-    explicit SecureString(const std::wstring& str = L"") {
+    explicit SecureString(const std::wstring& str = L"") : locked(false) {
         if (!str.empty()) {
             data.resize(str.length() + 1);  // +1 for null terminator
             std::copy(str.begin(), str.end(), data.begin());
@@ -34,7 +34,7 @@ public:
     }
     
     // Copy constructor with secure handling
-    SecureString(const SecureString& other) {
+    SecureString(const SecureString& other) : locked(false) {
         if (!other.data.empty()) {
             data = other.data;
         }
