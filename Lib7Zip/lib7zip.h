@@ -14,22 +14,31 @@
 #include <string>
 #include <vector>
 
-// Include 7zip types
-#include "../includes/CPP/Common/MyTypes.h"
-
 #ifndef _WIN32
 #define __int64 long long int
 typedef std::basic_string<wchar_t> wstring;
 typedef std::basic_string<char> string;
-// CLASS_E_CLASSNOTAVAILABLE will be defined by MyWindows.h
-#define FILE_BEGIN           0
-#define FILE_CURRENT         1
-#define FILE_END             2
-#define S_OK 				 0
 #else
 typedef std::basic_string<wchar_t> wstring;
 typedef std::basic_string<char> string;
 #endif
+
+// Define UInt64 for backward compatibility
+// Check if we're in C++11 mode where uint64_t is available
+#if defined(__cplusplus) && __cplusplus >= 201103L
+#include <cstdint>
+typedef uint64_t UInt64;
+#else
+// Fallback to traditional definition for older compilers
+typedef unsigned __int64 UInt64;
+#endif
+
+// CLASS_E_CLASSNOTAVAILABLE will be defined by MyWindows.h, don't define it here
+// to avoid redefinition warnings
+#define FILE_BEGIN           0
+#define FILE_CURRENT         1
+#define FILE_END             2
+#define S_OK 				 0
 
 typedef std::vector<wstring> WStringArray;
 
