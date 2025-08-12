@@ -137,6 +137,7 @@ public:
 public:
 	virtual wstring GetFirstVolumeName() {
 		m_strCurVolume = m_strFileName;
+		wprintf(L"GetFirstVolumeName called, returning: %ls\n", m_strCurVolume.c_str());
 		MoveToVolume(m_strCurVolume);
 		return m_strCurVolume;
 	}
@@ -165,6 +166,7 @@ public:
 	}
 
 	virtual C7ZipInStream * OpenCurrentVolumeStream() {
+		wprintf(L"OpenCurrentVolumeStream called for: %ls\n", m_strCurVolume.c_str());
 		return new TestInStream(m_strCurVolume);
 	}
 		
@@ -297,8 +299,18 @@ int main(int argc, char * argv[])
 
 	C7ZipArchive * pArchive = NULL;
 
+	// 检查文件是否存在
+	FILE* testFile = fopen("test.7z.001", "rb");
+	if (!testFile) {
+		wprintf(L"Error: test.7z.001 file not found! Skipping multi-volume test.\n");
+		return 0;
+	}
+	fclose(testFile);
+
+	wprintf(L"Opening multi-volume archive test.7z.001...\n");
 	TestMultiVolumes volumes(L"test.7z.001");
 	TestOutStream oStream("TestMultiResult.txt");
+	wprintf(L"Attempting to open multi-volume archive...\n");
 	if (lib.OpenMultiVolumeArchive(&volumes, &pArchive))
 	{
 		unsigned int numItems = 0;
@@ -325,10 +337,12 @@ int main(int argc, char * argv[])
 					pArchive->Extract(pArchiveItem, &oStream);
 				}
 		}
+		wprintf(L"Multi-volume archive opened successfully!\n");
 	}
 	else
 	{
-		wprintf(L"open archive test.7z.001 fail\n");
+		wprintf(L"Failed to open archive test.7z.001\n");
+		wprintf(L"LastError: %d\n", lib.GetLastError());
 	}
 
 	if (pArchive != NULL)

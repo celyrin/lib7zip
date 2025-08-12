@@ -153,7 +153,7 @@ int main(int argc, char * argv[])
 			
 			//print archive properties
 			for(lib7zip::PropertyIndexEnum index = lib7zip::PROP_INDEX_BEGIN;
-				index < lib7zip::PROP_INDEX_END;
+				index <= lib7zip::kpidMethod;  // Only iterate through defined properties
 				index = (lib7zip::PropertyIndexEnum)(index + 1)) {
 				wstring strVal = L"";
 				UInt64 val = 0;
@@ -161,8 +161,12 @@ int main(int argc, char * argv[])
 
 				bool result = pArchive->GetUInt64Property(index, val);
 
-				wprintf(L"\n\nGetArciveProperty:%d %ls\n", (int)index, 
-						index_names[(int)index]);
+				if ((int)index < 22) {
+					wprintf(L"\n\nGetArciveProperty:%d %ls\n", (int)index, 
+							index_names[(int)index]);
+				} else {
+					wprintf(L"\n\nGetArciveProperty:%d (kpidMethod)\n", (int)index);
+				}
 
 				wprintf(L"Archive UInt64 result:%ls val=%ld\n", 
 						result ? L"true" : L"false",
@@ -201,7 +205,7 @@ int main(int argc, char * argv[])
 
 					wprintf(L"get all properties\n");
 					for(lib7zip::PropertyIndexEnum index = lib7zip::PROP_INDEX_BEGIN;
-						index <= lib7zip::PROP_INDEX_END;
+						index < lib7zip::PROP_INDEX_END;
 						index = (lib7zip::PropertyIndexEnum)(index + 1)) {
 						wstring strVal = L"";
 						UInt64 val = 0;
@@ -209,8 +213,13 @@ int main(int argc, char * argv[])
 
 						bool result = pArchiveItem->GetUInt64Property(index, val);
 
-						wprintf(L"\n\nGetProperty:%d %ls\n", (int)index, 
-								index_names[(int)index]);
+						if ((int)index < 22) {
+							wprintf(L"\n\nGetProperty:%d %ls\n", (int)index, 
+									index_names[(int)index]);
+						} else {
+							wprintf(L"\n\nGetProperty:%d (index out of range)\n", (int)index);
+							break;
+						}
 
 						wprintf(L"UInt64 result:%ls val=%ld\n", 
 								result ? L"true" : L"false",
